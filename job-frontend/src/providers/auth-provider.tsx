@@ -9,13 +9,12 @@ import { Response, User } from "@/types";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated , data } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, data } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const { fetch } = useAxios();
 
-  console.log(data);
-  
+  console.log(isAuthenticated , data);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -32,7 +31,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       getMeUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, isAuthenticated]);
+  }, []);
 
   return <Fragment>{children}</Fragment>;
 }

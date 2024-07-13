@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { db } from "../../lib/db";
 import { RegisterRoleSchema } from "../../lib/zod";
 import { AuthenticatedRequest } from "../../types";
+import { getUser } from "../../util/user";
 
 export const updateDetails = async (req: Request, res: Response) => {
   const body = req.body;
@@ -70,7 +71,7 @@ export const updateDetails = async (req: Request, res: Response) => {
 export const me = async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user.id;
 
-  const user = await db.user.findUnique({ where: { id: userId } });
+  const user = await getUser({id : userId})
 
   return res.status(200).json({ data: user });
 };

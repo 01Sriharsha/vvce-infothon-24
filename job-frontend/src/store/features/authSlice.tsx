@@ -18,11 +18,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     authenticate: (state, action) => {
-      if (!state.isAuthenticated) {
         state.isAuthenticated = true;
         state.data = action.payload;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
-      }
     },
     logout: (state) => {
       state.isAuthenticated = false;

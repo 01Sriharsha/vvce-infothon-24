@@ -24,7 +24,7 @@ export default function Navbar() {
     }
     return "";
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   return (
     <nav className="fixed inset-x-0 top-0 border-b border-b-zinc-700 z-50 bg-background">
