@@ -22,6 +22,7 @@ import { authenticate } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { LoaderIcon } from "lucide-react";
 import axios from "@/lib/axios";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -122,9 +123,9 @@ const EditProfilePage: React.FC = () => {
 
               {/* Remember Me and Forgot Password */}
               <div className="flex justify-between items-center">
-                <a href="#" className="text-blue-500 hover:underline">
+                <Link href="#" className="text-blue-500 hover:underline">
                   Forgot Password?
-                </a>
+                </Link>
               </div>
 
               {/* Login button */}

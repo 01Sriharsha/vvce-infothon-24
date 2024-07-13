@@ -1,16 +1,24 @@
-import { FC, useMemo } from "react";
-import { UserPen } from "lucide-react";
+"use client";
+
+import { FC, useEffect, useMemo } from "react";
+import { BriefcaseBusiness, LogOut, UserPen } from "lucide-react";
 import { ListCollapse } from "lucide-react";
 import NavItem from "@/components/globals/nav-items";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { logout } from "@/store/features/authSlice";
+import { useRouter } from "next/navigation";
 
-interface SideBarProps {
-  userType: string;
-  onNavigate: (section: string) => void;
-}
+const SideBar = () => {
+  const { data, isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-const SideBar: FC<SideBarProps> = () => {
-  const { data } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
+
   const routes = useMemo(() => {
     if (data?.role === "STUDENT") {
       return [
@@ -37,6 +45,11 @@ const SideBar: FC<SideBarProps> = () => {
           href: "/u/recruiter/roleDetails",
           icon: ListCollapse,
         },
+        {
+          label: "Add Job",
+          href: "/u/recruiter/createJob",
+          icon: BriefcaseBusiness,
+        },
       ];
     } else if (data?.role === "COORDINATOR") {
       return [
@@ -61,17 +74,26 @@ const SideBar: FC<SideBarProps> = () => {
           <div className="flex items-center">
             <h2 className="text-xl font-bold">Profile</h2>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 space-y-2">
             {routes?.map((route, i) => (
               <NavItem
                 key={i}
                 label={route.label}
                 href={route.href}
                 icon={route.icon}
-                className="w-full py-2 flex justify-center items-center gap-2"
+                className="w-full py-2 flex items-center gap-2"
               />
             ))}
           </div>
+          {isAuthenticated && (
+            <button
+              className="w-full flex items-center gap-2"
+              onClick={() => dispatch(logout())}
+            >
+              <LogOut />
+              <span>Logout</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
