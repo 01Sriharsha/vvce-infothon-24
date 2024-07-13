@@ -24,7 +24,7 @@ export const updateDetails = async (req: Request, res: Response) => {
   if (data.role === "STUDENT" && data.student) {
     await db.student.create({
       data: {
-        userId: user.id,
+        userId: 1,
         USN: data.student.USN,
         branch: data.student.branch,
         graduationYear: data.student.graduationYear,
@@ -40,24 +40,26 @@ export const updateDetails = async (req: Request, res: Response) => {
   } else if (data.role === "RECRUITER" && data.recruiter) {
     await db.recruiter.create({
       data: {
-        userId: user.id,
+        user: { connect: { id: user.id } },
         companyName: data.recruiter.companyName,
         companyDescription: data.recruiter.companyDescription,
         position: data.recruiter.position,
         address: data.recruiter.address,
         phone: data.recruiter.phone,
         picture: data.recruiter.picture,
+        social_links: data.recruiter.social_links,
       },
     });
   } else if (data.role === "COORDINATOR" && data.coordinator) {
     await db.coordinator.create({
       data: {
-        userId: user.id,
+        userId: 1,
         department: data.coordinator.department,
         position: data.coordinator.position,
         address: data.coordinator.address,
         phone: data.coordinator.phone,
         picture: data.coordinator.picture,
+        social_links: data.coordinator.social_links,
       },
     });
   }
