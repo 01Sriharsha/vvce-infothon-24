@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import React, { useState } from "react";
 
 // Dummy data
@@ -197,12 +198,12 @@ const JobsPage = () => {
                       <strong>Min CGPA:</strong> {job.min_cgpa}
                     </p>
                   </div>
-                  <a
+                  <Link
                     href={`/jobs/${job.id}`}
                     className="text-teal-500 hover:underline"
                   >
                     View Details
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))

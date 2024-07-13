@@ -1,4 +1,6 @@
 import { User } from "@/types";
+import { STORAGE_KEY } from "@/util/constant";
+import { getlocalstorage } from "@/util/localstorage";
 import { createSlice } from "@reduxjs/toolkit";
 
 type AuthState = {
@@ -7,7 +9,7 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  isAuthenticated: false,
+  isAuthenticated: !!getlocalstorage<boolean>(STORAGE_KEY),
   data: null,
 };
 
@@ -18,10 +20,12 @@ const authSlice = createSlice({
     authenticate: (state, action) => {
       state.isAuthenticated = true;
       state.data = action.payload;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
     },
     logout: (state) => {
       state.isAuthenticated = false;
       state.data = null;
+      localStorage.removeItem(STORAGE_KEY);
     },
   },
 });

@@ -1,6 +1,5 @@
 "use client";
 import { ReactNode } from "react";
-import NavBar from "./_components/navbar";
 import SideBar from "./_components/sidebar";
 
 interface UserProfileLayoutProps {
@@ -9,14 +8,10 @@ interface UserProfileLayoutProps {
   onNavigate: (section: string) => void; // Function to handle navigation
 }
 
-const UserProfileLayout = ({
-  children,
-  userType,
-  onNavigate,
-}: UserProfileLayoutProps) => {
+const UserProfileLayout = ({ children }: UserProfileLayoutProps) => {
   return (
     <div className="h-full flex pt-5 overflow-y-auto">
-      <SideBar userType={userType} onNavigate={onNavigate} />
+      <SideBar />
       <main className="w-full justify-center flex">{children}</main>
     </div>
   );

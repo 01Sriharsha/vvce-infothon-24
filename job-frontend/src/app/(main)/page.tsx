@@ -76,9 +76,9 @@ const HomePage = () => {
           <p className="text-xl mb-8">
             Join us now and streamline your interview scheduling process today!
           </p>
-          <a href="/signup" className="bg-white text-teal-600 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition">
+          <Link href="/signup" className="bg-white text-blue-600 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition">
             Sign Up
-          </a>
+          </Link>
         </div>
       </section>
 

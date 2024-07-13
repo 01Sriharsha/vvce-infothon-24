@@ -10,6 +10,9 @@ import { useMemo } from "react";
 export default function Navbar() {
   const { isAuthenticated, data } = useAppSelector((state) => state.auth);
 
+  console.log(data);
+  
+
   const href = useMemo(() => {
     if (data?.role === "STUDENT") {
       return "/u/student";

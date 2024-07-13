@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const AboutUsPage = () => {
@@ -37,12 +38,12 @@ const AboutUsPage = () => {
         <p className="text-lg ">
           If you have any questions or need further assistance, please feel free
           to{" "}
-          <a
+          <Link
             href="mailto:support@ourplatform.com"
             className="text-teal-500 hover:underline"
           >
             contact us
-          </a>
+          </Link>
           .
         </p>
       </section>
