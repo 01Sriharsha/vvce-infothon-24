@@ -1,4 +1,5 @@
 "use client";
+
 import * as z from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,9 +14,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useAxios } from "@/hooks/useAxios";
+import { Response, User } from "@/types";
+import { toast } from "sonner";
+import { useAppDispatch } from "@/store";
+import { authenticate } from "@/store/features/authSlice";
+import { useRouter } from "next/navigation";
+import { LoaderIcon } from "lucide-react";
+import axios from "@/lib/axios";
 
 const formSchema = z.object({
-  emailAddress: z.string().email(),
+  email: z.string().email(),
   password: z.string().min(3),
   rememberMe: z.boolean().optional(),
 });
@@ -26,13 +35,30 @@ const EditProfilePage: React.FC = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      emailAddress: "",
-      rememberMe: false,
+      email: "",
+      password: "",
     },
   });
 
-  const handleSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const { mutate, loading } = useAxios();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleSubmit: SubmitHandler<FormData> = async (values) => {
+    const { error, data } = await mutate<Response<User>>(
+      "post",
+      "/auth/login",
+      values
+    );
+    console.log(data, error);
+    if (error) {
+      toast.error(error);
+      return;
+    } else if (data) {
+      dispatch(authenticate(data.data));
+      toast.success(data.message);
+      router.replace("/");
+    }
   };
 
   return (
@@ -40,7 +66,7 @@ const EditProfilePage: React.FC = () => {
       <div className="w-full h-[50ch] max-w-4xl bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row items-center gap-4">
         {/* Image */}
         <div className="w-full md:w-4/5 flex justify-center">
-        <Image
+          <Image
             src="/images/login.jpg"
             alt="Login Illustration"
             width={700}
@@ -59,7 +85,7 @@ const EditProfilePage: React.FC = () => {
               {/* Email */}
               <FormField
                 control={form.control}
-                name="emailAddress"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email address</FormLabel>
@@ -106,7 +132,7 @@ const EditProfilePage: React.FC = () => {
                 type="submit"
                 className="w-full hover:bg-green-700 text-white py-2 rounded-lg"
               >
-                Login
+                {loading ? <LoaderIcon className="animate-spin" /> : "Login"}
               </Button>
             </form>
           </Form>
