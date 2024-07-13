@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int            @id @default(autoincrement())
+  name              String
+  email             String         @unique
+  password          String
+  role              Role
+  verifyToken       String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  bookings          Booking[]
+  notificationsFrom Notification[] @relation("NotificationFrom")
+  notificationsTo   Notification[] @relation("NotificationTo")
+  student           Student?
+  recruiter         Recruiter?
+  coordinator       Coordinator?
+}
+
+model Student {
+  id             Int     @id @default(autoincrement())
+  userId         Int     @unique
+  USN            String  @unique
+  branch         String
+  graduationYear Int
+  current_year   Int
+  address        String?
+  phone          String?
+  picture        String?
+  resume         String?
+  CGPA           Float?
+  about          String? @db.Text
+  social_links   Json //{"github" :"" , "linkedin" : ""}
+  user           User    @relation(fields: [userId], references: [id])
+}
+
+model Recruiter {
+  id                 Int     @id @default(autoincrement())
+  userId             Int     @unique
+  companyName        String
+  companyDescription String
+  position           String
+  domain             String?
+  website_link       String?
+  address            String?
+  phone              String?
+  picture            String?
+  social_links       Json
+  jobs               Job[]
+  user               User    @relation(fields: [userId], references: [id])
+}
+
+model Coordinator {
+  id           Int     @id @default(autoincrement())
+  userId       Int     @unique
+  department   String
+  position     String
+  address      String?
+  phone        String?
+  picture      String?
+  social_links Json
+  user         User    @relation(fields: [userId], references: [id])
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  recruiterId Int
+  title       String
+  description String   @db.Text
+  type        String
+  duration    String
+  package     String
+  min_cgpa    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  recruiter Recruiter @relation(fields: [recruiterId], references: [id])
+}
+
+model Slot {
+  id        Int       @id @default(autoincrement())
+  date      DateTime
+  time      String
+  company   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  slotId    Int
+  status    BookingStatus
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  slot Slot @relation(fields: [slotId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  fromId    Int
+  toId      Int
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  from User @relation("NotificationFrom", fields: [fromId], references: [id])
+  to   User @relation("NotificationTo", fields: [toId], references: [id])
+}
+
+enum Role {
+  STUDENT
+  RECRUITER
+  COORDINATOR
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
