@@ -12,4 +12,9 @@ export const config = {
   jwt: {
     secretkey: process.env.SECRET_KEY,
   },
+  gemini: {
+    api: {
+      key: process.env.GEMINI_API_KEY,
+    },
+  },
 };

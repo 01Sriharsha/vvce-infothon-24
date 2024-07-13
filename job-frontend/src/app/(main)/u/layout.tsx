@@ -15,12 +15,9 @@ const UserProfileLayout = ({
   onNavigate,
 }: UserProfileLayoutProps) => {
   return (
-    <div>
-      <NavBar />
-      <div className="flex">
-        <SideBar userType={userType} onNavigate={onNavigate} />
-        <main className="w-full justify-center flex">{children}</main>
-      </div>
+    <div className="h-full flex pt-5 overflow-y-auto">
+      <SideBar userType={userType} onNavigate={onNavigate} />
+      <main className="w-full justify-center flex">{children}</main>
     </div>
   );
 };
