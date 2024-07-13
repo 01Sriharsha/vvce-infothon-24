@@ -17,4 +17,9 @@ export const config = {
       key: process.env.GEMINI_API_KEY,
     },
   },
+  resend: {
+    api: {
+      key: process.env.RESEND_API_KEY,
+    },
+  },
 };

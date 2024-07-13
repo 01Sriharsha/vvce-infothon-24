@@ -3,17 +3,17 @@ import { Request, Response } from "express";
 import { db } from "../../lib/db";
 import { LoginSchema, RegisterSchema } from "../../lib/zod";
 import { generateToken } from "../../util/token";
+import { Admin, User } from "@prisma/client";
 
 export const register = async (req: Request, res: Response) => {
   const body = req.body;
 
-  console.log(body);
-  
-
   const parsedSchema = RegisterSchema.safeParse(body);
 
   if (parsedSchema.error) {
-    return res.status(400).json({ message: parsedSchema.error.errors[0].message});
+    return res
+      .status(400)
+      .json({ message: parsedSchema.error.errors[0].message });
   }
 
   const { data } = parsedSchema;
@@ -60,17 +60,23 @@ export const login = async (req: Request, res: Response) => {
   const parsedSchema = LoginSchema.safeParse(body);
 
   if (parsedSchema.error) {
-    return res.status(400).json({ message: "Invalid data"});
+    return res.status(400).json({ message: "Invalid data" });
   }
 
   const { data } = parsedSchema;
 
-  const existingUser = await db.user.findUnique({
+  let existingUser: User | Admin;
+  existingUser = await db.admin.findUnique({
     where: { email: data.email },
   });
 
   if (!existingUser) {
-    return res.status(401).json({ message: "User not found!" })
+    existingUser = await db.user.findUnique({
+      where: { email: data.email },
+    });
+  }
+  if (!existingUser) {
+    return res.status(401).json({ message: "User not found!" });
   }
 
   const isValidPass = compareSync(data.password, existingUser.password);

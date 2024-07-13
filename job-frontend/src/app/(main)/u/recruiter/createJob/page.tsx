@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,10 +20,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const JobSchema = z.object({
+const JobSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   type: z.string().min(1, { message: "Type is required" }),
@@ -40,7 +39,7 @@ const CreateJobPage = () => {
     resolver: zodResolver(JobSchema),
     defaultValues: {
       description: "",
-      duration: "",
+      duration: "0 months",
       min_cgpa: "",
       package: "",
       title: "",
@@ -48,18 +47,20 @@ const CreateJobPage = () => {
     },
   });
 
-  const onSubmit = (values: JobSchema) => {};
+  const onSubmit: SubmitHandler<JobSchema> = async (values) => {
+    console.log(values);
+  };
 
   return (
     <main className="w-full min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
-      <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row items-center gap-4">
+      <div className="w-full bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row items-center gap-4">
         {/* Form */}
-        <div className="w-full md:w-1/2 flex flex-col items-center gap-4 pl-10">
-          <h1 className="text-2xl font-semibold">Sign Up</h1>
+        <div className="w-full flex flex-col items-center gap-4 pl-10">
+          <h1 className="text-2xl font-semibold">Add Job</h1>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-8 w-[400px] rounded-xl border border-gray-700 shadow-sm"
+              className="mx-auto space-y-8 w-1/2 rounded-xl border border-gray-700 shadow-sm p-4"
             >
               <FormField
                 control={form.control}
@@ -101,11 +102,12 @@ const CreateJobPage = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Job Title</FormLabel>
+                    <FormLabel>Job Description</FormLabel>
                     <FormControl>
                       <Textarea
                         rows={6}
                         placeholder="enter job description"
+                        className="border border-gray-600"
                         {...field}
                       />
                     </FormControl>

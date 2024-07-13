@@ -9,32 +9,29 @@ import { Response, User } from "@/types";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated , data } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const { fetch } = useAxios();
 
-  console.log(isAuthenticated);
+  console.log(data);
   
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace("/login");
+      router.replace("/");
     } else {
-      console.log("hello");
-      
       const getMeUser = async () => {
         const { error, data } = await fetch<Response<User>>("/user/me");
         if (error) {
           router.replace("/login");
         } else if (data) {
-          
           dispatch(authenticate(data.data));
         }
       };
       getMeUser();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, isAuthenticated]);
 
   return <Fragment>{children}</Fragment>;

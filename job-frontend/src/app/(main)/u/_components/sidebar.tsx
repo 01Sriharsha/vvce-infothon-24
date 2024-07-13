@@ -65,11 +65,20 @@ const SideBar = () => {
         },
       ];
     }
+    else if (data?.role === "ADMIN") {
+      return [
+        {
+          label: "Role Details",
+          href: "/u/admin/verify",
+          icon: ListCollapse,
+        },
+      ];
+    }
   }, [data]);
 
   return (
     <div className="flex overflow-y-auto">
-      <div className="flex flex-col h-screen p-3 bg-slate-300 shadow w-60">
+      <div className="flex flex-col h-full p-3 bg-slate-300 shadow w-60">
         <div className="space-y-3">
           <div className="flex items-center">
             <h2 className="text-xl font-bold">Profile</h2>

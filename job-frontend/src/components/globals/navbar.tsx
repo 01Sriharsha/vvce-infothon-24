@@ -4,14 +4,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import NavItem from "@/components/globals/nav-items";
 import { useAppSelector } from "@/store";
-import { User } from "lucide-react";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Navbar() {
   const { isAuthenticated, data } = useAppSelector((state) => state.auth);
-
-  console.log(data);
-  
+  const router = useRouter();
 
   const href = useMemo(() => {
     if (data?.role === "STUDENT") {
@@ -20,9 +19,12 @@ export default function Navbar() {
       return "/u/placementOfficer";
     } else if (data?.role === "RECRUITER") {
       return "/u/recruiter";
+    } else if (data?.role === "ADMIN") {
+      return "/u/admin/verify";
     }
     return "";
-  }, [data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <nav className="fixed inset-x-0 top-0 border-b border-b-zinc-700 z-50 bg-background">
@@ -49,7 +51,7 @@ export default function Navbar() {
         ) : (
           <div className="flex items-center gap-3">
             <Link href={href}>
-              <User />
+              <FaUserCircle role="button" size={"1.3rem"} />
             </Link>
           </div>
         )}

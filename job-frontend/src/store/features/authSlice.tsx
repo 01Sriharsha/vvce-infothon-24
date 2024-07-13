@@ -18,9 +18,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     authenticate: (state, action) => {
-      state.isAuthenticated = true;
-      state.data = action.payload;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+      if (!state.isAuthenticated) {
+        state.isAuthenticated = true;
+        state.data = action.payload;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+      }
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -30,6 +32,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {authenticate , logout} = authSlice.actions;
+export const { authenticate, logout } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;

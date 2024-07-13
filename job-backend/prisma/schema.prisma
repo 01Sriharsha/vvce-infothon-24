@@ -30,6 +30,14 @@ model User {
   coordinator       Coordinator?
 }
 
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name    String @default("Admin")
+  email    String @unique
+  password String
+  role     Role   @default(ADMIN)
+}
+
 model Student {
   id             Int     @id @default(autoincrement())
   userId         Int     @unique
@@ -129,6 +137,7 @@ enum Role {
   STUDENT
   RECRUITER
   COORDINATOR
+  ADMIN
 }
 
 enum BookingStatus {
