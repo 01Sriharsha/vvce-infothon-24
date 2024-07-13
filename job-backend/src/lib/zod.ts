@@ -36,6 +36,7 @@ export const RegisterRoleSchema = z.object({
       address: z.string().optional(),
       phone: z.string().optional(),
       picture: z.string().optional(),
+      social_links: z.any().optional(),
     })
     .optional(),
   coordinator: z
@@ -45,6 +46,7 @@ export const RegisterRoleSchema = z.object({
       address: z.string().optional(),
       phone: z.string().optional(),
       picture: z.string().optional(),
+      social_links: z.any().optional(),
     })
     .optional(),
 });

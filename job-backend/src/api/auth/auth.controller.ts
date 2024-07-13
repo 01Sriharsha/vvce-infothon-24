@@ -7,10 +7,13 @@ import { generateToken } from "../../util/token";
 export const register = async (req: Request, res: Response) => {
   const body = req.body;
 
+  console.log(body);
+  
+
   const parsedSchema = RegisterSchema.safeParse(body);
 
   if (parsedSchema.error) {
-    return res.json({ message: "Invalid data" }).status(400);
+    return res.status(400).json({ message: parsedSchema.error.errors[0].message});
   }
 
   const { data } = parsedSchema;
@@ -20,7 +23,7 @@ export const register = async (req: Request, res: Response) => {
   });
 
   if (existingUser) {
-    return res.json({ message: "User already exists!" }).status(401);
+    return res.status(401).json({ message: "User already exists!" });
   }
 
   const hashedPassword = await hash(data.password, 10);
@@ -57,7 +60,7 @@ export const login = async (req: Request, res: Response) => {
   const parsedSchema = LoginSchema.safeParse(body);
 
   if (parsedSchema.error) {
-    return res.json({ message: "Invalid data" }).status(400);
+    return res.status(400).json({ message: "Invalid data"});
   }
 
   const { data } = parsedSchema;
@@ -67,13 +70,13 @@ export const login = async (req: Request, res: Response) => {
   });
 
   if (!existingUser) {
-    return res.json({ message: "User not found!" }).status(401);
+    return res.status(401).json({ message: "User not found!" })
   }
 
   const isValidPass = compareSync(data.password, existingUser.password);
 
   if (!isValidPass) {
-    return res.json({ message: "Invalid credentials!" }).status(401);
+    return res.status(401).json({ message: "Invalid credentials!" });
   }
 
   const { password, ...user } = existingUser;
