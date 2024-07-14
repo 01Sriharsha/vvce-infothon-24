@@ -11,3 +11,15 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+
+export type TranscribeReponse = {
+  transcription: string;
+  completion: string;
+  history: {
+    role: string;
+    parts: {
+      text: string;
+    }[];
+  }[];
+};

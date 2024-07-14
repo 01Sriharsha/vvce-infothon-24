@@ -20,6 +20,7 @@ model User {
   password          String
   role              Role
   verifyToken       String?
+  verified          Boolean?       @default(false)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   bookings          Booking[]
@@ -32,7 +33,7 @@ model User {
 
 model Admin {
   id       Int    @id @default(autoincrement())
-  name    String @default("Admin")
+  name     String @default("Admin")
   email    String @unique
   password String
   role     Role   @default(ADMIN)

@@ -1,10 +1,11 @@
-import { Router } from "express"
-import { generateText } from "./generate.controller"
+import { Router } from "express";
+import upload from "../../middleware/file-middleware";
+import { speechToText } from "./generate.controller";
 
 const generateRouter = () => {
-    const router = Router()
-    router.post("/" , generateText)
-    return router
-}
+  const router = Router();
+  router.post("/", upload.single("audio"), speechToText);
+  return router;
+};
 
-export default generateRouter
+export default generateRouter;

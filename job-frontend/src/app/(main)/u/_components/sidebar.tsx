@@ -32,6 +32,11 @@ const SideBar = () => {
           href: "/u/student/roleDetails",
           icon: ListCollapse,
         },
+        {
+          label: "AI Mock Interview",
+          href: "/u/student/screening",
+          icon: ListCollapse,
+        },
       ];
     } else if (data?.role === "RECRUITER") {
       return [
@@ -68,7 +73,7 @@ const SideBar = () => {
     else if (data?.role === "ADMIN") {
       return [
         {
-          label: "Role Details",
+          label: "Verify User",
           href: "/u/admin/verify",
           icon: ListCollapse,
         },
