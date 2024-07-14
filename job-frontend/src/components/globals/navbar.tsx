@@ -7,6 +7,7 @@ import { useAppSelector } from "@/store";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Navbar() {
   const { isAuthenticated, data } = useAppSelector((state) => state.auth);
@@ -28,8 +29,17 @@ export default function Navbar() {
 
   return (
     <nav className="fixed inset-x-0 top-0 border-b border-b-zinc-700 z-50 bg-background">
-      <div className="relative w-full py-4 px-2 flex items-center justify-between">
+      <div className="relative w-full px-2 flex items-center justify-between">
         <div className="flex items-center gap-6">
+        <div className="w-1/5">
+         <Image
+            src="/images/icon.png"
+            alt="icon"
+            width={60}
+            height={60}
+            className="w-full max-w-xs rounded-lg h-full object-fill p-2"
+          />
+          </div>
           <Link href="/">
             <h1 className="text-xl font-semibold">JobSeek</h1>
           </Link>

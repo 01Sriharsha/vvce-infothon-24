@@ -6,7 +6,7 @@ import AppProvider from "@/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Job Scheduling",
+  title: "JobSeek",
   description: "Website dedicated for placements",
 };
 
@@ -17,6 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning={false}>
+      <head>
+        <link rel="icon" href="\favicon.ico" sizes="any" />
+      </head>
       <body className={inter.className}>
         <AppProvider>{children}</AppProvider>
       </body>
