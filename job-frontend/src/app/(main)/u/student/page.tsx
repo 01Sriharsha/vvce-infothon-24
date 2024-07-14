@@ -1,4 +1,4 @@
-import EditProfilePage from "../_components/EditProfile";
+import EditProfilePage from "../_components/editProfile";
 
 const StudentPage = () => {
   return (
