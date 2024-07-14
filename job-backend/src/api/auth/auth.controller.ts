@@ -65,7 +65,9 @@ export const login = async (req: Request, res: Response) => {
 
   const { data } = parsedSchema;
 
-  let existingUser: User | Admin;
+  let existingUser;
+
+  let isVerfied = false;
   existingUser = await db.admin.findUnique({
     where: { email: data.email },
   });
@@ -74,9 +76,17 @@ export const login = async (req: Request, res: Response) => {
     existingUser = await db.user.findUnique({
       where: { email: data.email },
     });
+    isVerfied = existingUser.verified;
   }
+
   if (!existingUser) {
     return res.status(401).json({ message: "User not found!" });
+  }
+
+  if (existingUser.role === "RECRUITER" && !isVerfied) {
+    return res
+      .status(401)
+      .json({ message: "Your profile is still under review!" });
   }
 
   const isValidPass = compareSync(data.password, existingUser.password);

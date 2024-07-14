@@ -12,99 +12,102 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { useAxios } from "@/hooks/useAxios";
+import { toast } from "sonner";
 
 // Define the schema for form validation
 const formSchema = z.object({
-  profilePhoto: z.string().optional(), // Assuming this will be a URL/path to the file
-  resume: z.string().optional(), // Assuming this will be a URL/path to the file
+  profilePhoto: z.string(), // Assuming this will be a URL/path to the file
+  resume: z.string(), // Assuming this will be a URL/path to the file
   USN: z.string().min(3).max(20),
   course: z.string().min(1), // Consider renaming to 'branch' for consistency
-  graduationYear: z.number().int().min(1900), // Change to match model type
-  current_year: z.number().int().min(1), // Change to match model type
+  graduationYear: z.string(), // Change to match model type
+  current_year: z.number(), // Change to match model type
   address: z.string().optional(), // Make optional to match model
-  phone: z.string()
+  phone: z
+    .string()
     .min(10)
     .max(15)
     .regex(/^\d+$/, "Must be a valid phone number")
     .optional(), // Make optional to match model
   about: z.string().optional(), // Make optional to match model
   gradeCGPA: z.number().min(0).max(10).optional(), // Change to Float to match model
-  socialMedia: z
-    .object({
-      platform: z.string().min(1),
-      link: z.string().url().optional(),
-    })
-    .optional(),
+  socialMedia: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-// Define props interface
-interface StudentRoleDetailsFormProps {
-  id: number;
-}
-
-const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) => {
-  const [resume, setResume] = useState<File | null>(null);
+const StudentRoleDetailsForm = ({ id, role }: { id: number; role: string }) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       USN: "",
       course: "",
-      graduationYear: 2023,
+      graduationYear: "2023",
       current_year: 1,
       gradeCGPA: 0,
       address: "",
       phone: "",
       about: "",
-      socialMedia: {
-        platform: "",
-        link: "",
-      }
+      socialMedia: "",
     },
   });
-  
+
   const { mutate, loading } = useAxios();
 
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResume(e.target.files[0]);
-      form.setValue("resume", e.target.files[0].name);
+      const selectedFile = e.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        if (fileReader.result) {
+          form.setValue("resume", fileReader.result.toString());
+        }
+      };
+
+      fileReader.readAsDataURL(selectedFile);
+    }
+  };
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        if (fileReader.result) {
+          form.setValue("profilePhoto", fileReader.result.toString());
+        }
+      };
+
+      fileReader.readAsDataURL(selectedFile);
     }
   };
 
-  const handleClick: SubmitHandler<FormData> = (values) => {
-    console.log("Button clicked!");
-    mutate("post", "/user/update", {
-      userId: id, // Use the passed id prop
+  const handleSubmit: SubmitHandler<FormData> = async (values) => {
+    console.log(values);
+
+    const student = {
+      // Use the passed id prop
       USN: values.USN,
       branch: values.course,
-      graduationYear: values.graduationYear,
+      graduationYear: parseInt(values.graduationYear),
       current_year: values.current_year,
       address: values.address,
       phone: values.phone,
       picture: values.profilePhoto,
       resume: values.resume,
       about: values.about,
-      social_links: {
-        platform: values.socialMedia?.platform,
-        link: values.socialMedia?.link,
-      },
-    });
-  };
+      social_links: values.socialMedia,
+    };
 
-  const handleSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-    if (resume) {
-      console.log("Resume file:", resume);
+    const { error, data } = await mutate("post", "/user/update", {
+      student,
+      userId: id,
+      role
+    });
+    if (error) {
+      toast.error(error);
+    } else if (data) {
+      console.log(data);
     }
   };
 
@@ -123,7 +126,7 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
       <div className="w-full max-w-md flex flex-col items-center gap-4 bg-pink rounded-lg p-6">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleClick)} // Use handleClick here
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="w-full flex flex-col gap-4"
           >
             {/* Profile Photo Upload */}
@@ -137,11 +140,7 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          field.onChange(e.target.files[0]);
-                        }
-                      }}
+                      onChange={handleProfileChange}
                       className="rounded-full"
                     />
                   </FormControl>
@@ -223,7 +222,13 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Current Year</FormLabel>
-                  <Input type="text" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      form.setValue("current_year", parseInt(e.target.value))
+                    }
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -274,7 +279,13 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Grade/CGPA</FormLabel>
-                  <Input type="text" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      form.setValue("gradeCGPA", parseInt(e.target.value))
+                    }
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -286,29 +297,10 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
               <div className="flex flex-col gap-4">
                 <FormField
                   control={form.control}
-                  name="socialMedia.platform"
+                  name="socialMedia"
                   render={({ field }) => (
                     <FormControl>
-                      <Select onValueChange={(value) => field.onChange(value)}>
-                        <SelectTrigger>
-                          <span>Select a platform</span>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="facebook">Facebook</SelectItem>
-                          <SelectItem value="twitter">Twitter</SelectItem>
-                          <SelectItem value="linkedin">LinkedIn</SelectItem>
-                          {/* Add more platforms as needed */}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="socialMedia.link"
-                  render={({ field }) => (
-                    <FormControl>
-                      <Input placeholder="Link" {...field} />
+                      <Input placeholder="add link" {...field} />
                     </FormControl>
                   )}
                 />
@@ -316,7 +308,9 @@ const StudentRoleDetailsForm: React.FC<StudentRoleDetailsFormProps> = ({ id }) =
             </FormItem>
 
             {/* Submit button */}
-            <Button type="submit" className="hover:bg-green-800">Save Details</Button>
+            <Button type="submit" className="hover:bg-green-800">
+              Save Details
+            </Button>
           </form>
         </Form>
       </div>

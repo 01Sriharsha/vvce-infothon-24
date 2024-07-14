@@ -5,13 +5,10 @@ import { AuthenticatedRequest } from "../../types";
 import { getUser } from "../../util/user";
 
 export const updateDetails = async (req: Request, res: Response) => {
-  const body = req.body;
-
-  const parsedSchema = RegisterRoleSchema.safeParse(body);
-
-  const { data } = parsedSchema;
-
-  const user = await db.user.findUnique({ where: { id: data.userId } });
+  const data = req.body as RegisterRoleSchema;
+  console.log(data);
+  
+  let user = await db.user.findUnique({ where: { id: data.userId } });
 
   if (!user) {
     return res
@@ -22,10 +19,12 @@ export const updateDetails = async (req: Request, res: Response) => {
       .status(401);
   }
 
+  let savedUser;
+
   if (data.role === "STUDENT" && data.student) {
-    await db.student.create({
+    savedUser = await db.student.create({
       data: {
-        userId: 1,
+        user: { connect: { id: user.id } },
         USN: data.student.USN,
         branch: data.student.branch,
         graduationYear: data.student.graduationYear,
@@ -39,7 +38,7 @@ export const updateDetails = async (req: Request, res: Response) => {
       },
     });
   } else if (data.role === "RECRUITER" && data.recruiter) {
-    await db.recruiter.create({
+    savedUser = await db.recruiter.create({
       data: {
         user: { connect: { id: user.id } },
         companyName: data.recruiter.companyName,
@@ -52,9 +51,9 @@ export const updateDetails = async (req: Request, res: Response) => {
       },
     });
   } else if (data.role === "COORDINATOR" && data.coordinator) {
-    await db.coordinator.create({
+    savedUser = await db.coordinator.create({
       data: {
-        userId: 1,
+        user: { connect: { id: user.id } },
         department: data.coordinator.department,
         position: data.coordinator.position,
         address: data.coordinator.address,
@@ -65,13 +64,17 @@ export const updateDetails = async (req: Request, res: Response) => {
     });
   }
 
+  if (!savedUser) {
+    return res.status(500).json({ data: "Failed to save user details" });
+  }
+
   return res.status(201).json({ message: "Data saved successfully!" });
 };
 
 export const me = async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user.id;
 
-  const user = await getUser({id : userId})
+  const user = await getUser({ id: userId });
 
   return res.status(200).json({ data: user });
 };

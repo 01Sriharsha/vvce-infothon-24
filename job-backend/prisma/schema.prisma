@@ -48,8 +48,8 @@ model Student {
   current_year   Int
   address        String?
   phone          String?
-  picture        String?
-  resume         String?
+  picture        String? @db.Text
+  resume         String? @db.Text
   CGPA           Float?
   about          String? @db.Text
   social_links   Json //{"github" :"" , "linkedin" : ""}

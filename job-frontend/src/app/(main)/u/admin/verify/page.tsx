@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -90,12 +88,28 @@ const AdminPage = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {users.map((user) => (
-            <div key={user.id} className="bg-white p-4 rounded-lg shadow-md space-y-3 capitalize">
+            <div
+              key={user.id}
+              className="bg-white p-4 rounded-lg shadow-md space-y-3 capitalize"
+            >
               <h3 className="text-xl font-bold">{user.name}</h3>
               <p>Email: {user.email}</p>
               <p>Role: {user.role}</p>
+              {user?.role === "RECRUITER" && (
+                <>
+                  <p>Comapny Name: {user?.recruiter?.companyName}</p>
+                  <p>
+                    Company Description: {user?.recruiter?.companyDescription}
+                  </p>
+                  <p>Domain: {user?.recruiter?.domain}</p>
+                  <p>Phone: {user?.recruiter?.phone}</p>
+                  <p>Address: {user?.recruiter?.address}</p>
+                  <p>Position: {user?.recruiter?.position}</p>
+                  <p>Website Link: {user?.recruiter?.website_link}</p>
+                </>
+              )}
               <Button
                 onClick={() => handleVerify(user.id)}
                 className={`mt-2 py-2 px-4 rounded ${
