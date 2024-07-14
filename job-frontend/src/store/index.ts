@@ -2,10 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { authReducer } from "@/store/features/authSlice";
+import { transcriptReducer } from "./features/transcriptionSlice";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    transcript : transcriptReducer
   },
 });
 
