@@ -4,7 +4,7 @@
 
 ## Problem Statement 📌
 
-The current job interview scheduling process at universities is inefficient which leads to confusion, missed opportunities and administrative burdens. There is a lack of a centralized system for students to access available interview slots, booking appointments and receive confirmations. Employers face challenges in managing their schedules and ensuring that all interview slots are filled, while placement coordinators struggle with coordinating between students and employers, resulting in an overall inefficient and stressful process.
+The current job interview scheduling process at universities is inefficient which leads to confusion, missed opportunities and administrative burdens. There is a lack of a centralized system for students to access available interview slots, book appointments and receive confirmations. Employers face challenges in managing their schedules and ensuring that all interview slots are filled, while placement coordinators struggle with coordinating between students and employers, resulting in an overall inefficient and stressful process.
 
 ## Current Challenge 📑
 
@@ -21,13 +21,13 @@ Consider a university with multiple departments and programs, students often rel
 
 1. **Role-Based Authentication:**
    - Implemented role-based authentication systems and user profile updates to enhance security and user experience.
-   ***Admin will verify recruiter, so that no fake recruiter given permission for recruiting process***
+   ***Admin will verify the recruiter so that no fake recruiter given permission for the recruiting process***
 
 2. **Dashboard:**
    - **Students:** View available interview slots, book slots, and receive confirmations.
      - **Job Filtering:** Implemented feature to filter jobs based on duration, package, type of job, and CGPA, easing out the search for preferred companies.
    - **Recruiters:** View and manage available interview slots, confirm bookings and receive notifications.
-   - **Placement Coordinator:** Oversees the entire scheduling process, manage slots and handle conflicts.
+   - **Placement Coordinator:** Oversees the entire scheduling process, manages slots and handles conflicts.
 
 3. **AI Mock Interviews:**
    - Implemented an AI-driven mock interview feature to help students prepare effectively for interviews.
@@ -71,7 +71,8 @@ Consider a university with multiple departments and programs, students often rel
 ```git clone https://github.com/01Sriharsha/vvce-infothon-24.git```
 
 ### For frontend:
-1.```cd job-frontend```
+1.Change Directory:
+```cd job-frontend```
 
 2. Install dependencies:
 ```npm install```
@@ -89,7 +90,7 @@ Consider a university with multiple departments and programs, students often rel
 ```npm run start```
 
 
-###Design Link: ![Figma](https://www.figma.com/design/RwcphvmZlRh9KC5m8JJI9u/Job-Scheduling?node-id=0-1&t=O0Qs04QAZkt67pXv-1)
+###Design Link: [Figma](https://www.figma.com/design/RwcphvmZlRh9KC5m8JJI9u/Job-Scheduling?node-id=0-1&t=O0Qs04QAZkt67pXv-1)
 
 
 ## Impact 💥
@@ -111,5 +112,5 @@ Consider a university with multiple departments and programs, students often rel
 - **Enhanced Communication Tools:**
   Incorporate chat features and virtual meeting integrations (e.g., Zoom, Microsoft Teams) for remote interviews.
 - **Expanded Analytics:**
-  Implement more comprehensive analytics features for deeper insights into user behavior and scheduling efficiency.
+  Implement more comprehensive analytics features for deeper insights into user behaviour and scheduling efficiency.
 
